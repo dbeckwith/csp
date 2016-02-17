@@ -1,7 +1,7 @@
 package edu.wpi.cs.csp;
 
 /**
- * This class represents an item that can be added into a {@link Bag}.
+ * This class represents an item that can be added into a bag.
  *
  * @author Aditya Nivarthi
  */
@@ -11,7 +11,7 @@ public class Item {
     private String name = "";
 
     /**
-     * Creates an Item instance with the specified container {@link Bag} and name.
+     * Creates an Item instance with the specified container bag and name.
      *
      * @param bag  The {@link Bag} containing this item.
      * @param name The name of this item.
@@ -22,7 +22,7 @@ public class Item {
     }
 
     /**
-     * Creates an Item instance with the specified name.
+     * Creates an Item instance with the specified name. Sets the containing bat to null.
      *
      * @param name The name of this item.
      */
@@ -32,7 +32,7 @@ public class Item {
     }
 
     /**
-     * Returns the {@link Bag} containing this item.
+     * Returns the bag containing this item.
      *
      * @return a {@link Bag}
      */
@@ -41,7 +41,7 @@ public class Item {
     }
 
     /**
-     * Sets the {@link Bag} that is containing this item.
+     * Sets the bag that is containing this item.
      *
      * @param bag The {@link Bag} containing this item.
      */
