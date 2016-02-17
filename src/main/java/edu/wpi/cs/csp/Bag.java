@@ -84,4 +84,13 @@ public class Bag extends HashSet<Item> {
     public boolean isAtMinimumCapacity() {
         return Double.compare(currentSize, Math.floor(MAX_SIZE * capacityPercentage)) >= 0;
     }
+
+    /**
+     * Returns the maximum size of this bag.
+     *
+     * @return an integer.
+     */
+    public int getMaxSize() {
+        return MAX_SIZE;
+    }
 }
