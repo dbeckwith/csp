@@ -47,4 +47,12 @@ public class EqualityConstraint implements Constraint {
     public boolean test() {
         return item1.getBag() == item2.getBag();
     }
+
+    @Override
+    public String toString() {
+        return "EqualityConstraint{" +
+                "item1=" + item1.getName() +
+                ", item2=" + item2.getName() +
+                '}';
+    }
 }

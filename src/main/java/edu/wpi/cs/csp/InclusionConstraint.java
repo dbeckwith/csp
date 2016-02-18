@@ -1,5 +1,6 @@
 package edu.wpi.cs.csp;
 
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -49,5 +50,13 @@ public class InclusionConstraint implements Constraint {
     @Override
     public boolean test() {
         return Stream.of(bags).anyMatch(bag -> bag.contains(item));
+    }
+
+    @Override
+    public String toString() {
+        return "InclusionConstraint{" +
+                "item=" + item.getName() +
+                ", bags=" + Stream.of(bags).map(Bag::getName).collect(Collectors.joining(", ", "[", "]")) +
+                '}';
     }
 }

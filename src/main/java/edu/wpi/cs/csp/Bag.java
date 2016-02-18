@@ -1,6 +1,7 @@
 package edu.wpi.cs.csp;
 
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 /**
  * This class represents a bag that can hold items.
@@ -9,17 +10,20 @@ import java.util.HashSet;
  */
 public class Bag extends HashSet<Item> {
 
-    private final int MAX_SIZE;
-    private int currentSize = 0;
-    private double capacityPercentage = 0.9f;
+    private static final double CAPACITY_PERCENTAGE = 0.9f;
+
+    private final String name;
+    private final int maxSize;
 
     /**
-     * Creates a new Bag instance with the specified max size.
+     * Creates a new Bag instance with the specified name and max size.
      *
+     * @param name    The name of this bag.
      * @param maxSize The maximum size for this bag.
      */
-    public Bag(int maxSize) {
-        MAX_SIZE = maxSize;
+    public Bag(String name, int maxSize) {
+        this.name = name;
+        this.maxSize = maxSize;
     }
 
     /**
@@ -32,7 +36,6 @@ public class Bag extends HashSet<Item> {
     public boolean add(Item item) {
         if (super.add(item)) {
             item.setBag(this);
-            currentSize++;
             return true;
         }
 
@@ -51,8 +54,6 @@ public class Bag extends HashSet<Item> {
             if (o instanceof Item) {
                 ((Item) o).setBag(null);
             }
-
-            currentSize--;
             return true;
         }
 
@@ -69,7 +70,6 @@ public class Bag extends HashSet<Item> {
     public boolean move(Item item, Bag otherBag) {
         if (remove(item)) {
             item.setBag(otherBag);
-            currentSize--;
             return otherBag.add(item);
         }
 
@@ -82,7 +82,16 @@ public class Bag extends HashSet<Item> {
      * @return true if at minimum capacity, false otherwise
      */
     public boolean isAtMinimumCapacity() {
-        return Double.compare(currentSize, Math.floor(MAX_SIZE * capacityPercentage)) >= 0;
+        return size() >= Math.floor(maxSize * CAPACITY_PERCENTAGE);
+    }
+
+    /**
+     * Returns the name of this bag.
+     *
+     * @return a {@link String}
+     */
+    public String getName() {
+        return name;
     }
 
     /**
@@ -91,6 +100,34 @@ public class Bag extends HashSet<Item> {
      * @return an integer.
      */
     public int getMaxSize() {
-        return MAX_SIZE;
+        return maxSize;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Bag)) return false;
+        if (!super.equals(o)) return false;
+
+        Bag items = (Bag) o;
+
+        return name.equals(items.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Bag{" +
+                "name='" + name + '\'' +
+                ", maxSize=" + maxSize +
+                ", items=" + stream().map(Item::getName).collect(Collectors.joining(", ", "[", "]")) +
+                '}';
     }
 }

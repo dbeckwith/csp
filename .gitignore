@@ -4,6 +4,7 @@
 
 # IntelliJ project files
 #.idea
+/data
 #*.iml
 .idea/workspace.xml
 out

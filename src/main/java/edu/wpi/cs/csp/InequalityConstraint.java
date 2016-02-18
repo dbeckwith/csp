@@ -47,4 +47,12 @@ public class InequalityConstraint implements Constraint {
     public boolean test() {
         return item1.getBag() != item2.getBag();
     }
+
+    @Override
+    public String toString() {
+        return "InequalityConstraint{" +
+                "item1=" + item1.getName() +
+                ", item2=" + item2.getName() +
+                '}';
+    }
 }

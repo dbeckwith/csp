@@ -72,4 +72,14 @@ public class MutualInclusivityConstraint implements Constraint {
                 (item1.getBag() == bag2 && item2.getBag() == bag1) ||
                 (item1.getBag() != bag1 && item1.getBag() != bag2 && item2.getBag() != bag1 && item2.getBag() != bag2);
     }
+
+    @Override
+    public String toString() {
+        return "MutualInclusivityConstraint{" +
+                "item1=" + item1.getName() +
+                ", item2=" + item2.getName() +
+                ", bag1=" + bag1.getName() +
+                ", bag2=" + bag2.getName() +
+                '}';
+    }
 }

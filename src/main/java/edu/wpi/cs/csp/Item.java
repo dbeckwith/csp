@@ -7,28 +7,49 @@ package edu.wpi.cs.csp;
  */
 public class Item {
 
-    private Bag bag = null;
-    private String name = "";
+    private final String name;
+    private final int weight;
+    private Bag bag;
 
     /**
-     * Creates an Item instance with the specified container bag and name.
+     * Creates an Item instance with the specified name and weight. Sets the containing bag to null.
      *
-     * @param bag  The {@link Bag} containing this item.
-     * @param name The name of this item.
+     * @param name   The name of this item.
+     * @param weight The weight of this item.
      */
-    public Item(Bag bag, String name) {
-        this.bag = bag;
-        this.name = name;
+    public Item(String name, int weight) {
+        this(name, weight, null);
     }
 
     /**
-     * Creates an Item instance with the specified name. Sets the containing bat to null.
+     * Creates an Item instance with the specified name, weight, and container bag.
      *
-     * @param name The name of this item.
+     * @param name   The name of this item.
+     * @param weight The weight of this item.
+     * @param bag    The {@link Bag} containing this item.
      */
-    public Item(String name) {
+    public Item(String name, int weight, Bag bag) {
         this.name = name;
-        bag = null;
+        this.weight = weight;
+        this.bag = bag;
+    }
+
+    /**
+     * Returns the name of this item.
+     *
+     * @return a {@link String}
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Returns the weight of this item.
+     *
+     * @return an integer
+     */
+    public int getWeight() {
+        return weight;
     }
 
     /**
@@ -47,15 +68,6 @@ public class Item {
      */
     public void setBag(Bag bag) {
         this.bag = bag;
-    }
-
-    /**
-     * Returns the name of this item.
-     *
-     * @return a {@link String}
-     */
-    public String getName() {
-        return name;
     }
 
     /**
@@ -85,5 +97,14 @@ public class Item {
         int result = bag != null ? bag.hashCode() : 0;
         result = 31 * result + name.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "name='" + name + '\'' +
+                ", weight=" + weight +
+                ", bag=" + (bag == null ? "<none>" : bag.getName()) +
+                '}';
     }
 }

@@ -1,6 +1,7 @@
 package edu.wpi.cs.csp;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This class represents the constraint on {@link Bag}s that the number of {@link Item}s within each bag is between the specified minimum and maximum sizes.
@@ -60,5 +61,14 @@ public class BagFitConstraint implements Constraint {
     @Override
     public boolean test() {
         return bags.stream().allMatch(bag -> bag.size() >= getMin() && bag.size() <= getMax());
+    }
+
+    @Override
+    public String toString() {
+        return "BagFitConstraint{" +
+                "bags=" + bags.stream().map(Bag::getName).collect(Collectors.joining(", ", "[", "]")) +
+                ", min=" + min +
+                ", max=" + max +
+                '}';
     }
 }
