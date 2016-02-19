@@ -13,17 +13,17 @@ public class Bag extends HashSet<Item> {
     private static final double CAPACITY_PERCENTAGE = 0.9f;
 
     private final String name;
-    private final int maxSize;
+    private final int capacity;
 
     /**
      * Creates a new Bag instance with the specified name and max size.
      *
-     * @param name    The name of this bag.
-     * @param maxSize The maximum size for this bag.
+     * @param name     The name of this bag.
+     * @param capacity The maximum size for this bag.
      */
-    public Bag(String name, int maxSize) {
+    public Bag(String name, int capacity) {
         this.name = name;
-        this.maxSize = maxSize;
+        this.capacity = capacity;
     }
 
     /**
@@ -82,7 +82,7 @@ public class Bag extends HashSet<Item> {
      * @return true if at minimum capacity, false otherwise
      */
     public boolean isAtMinimumCapacity() {
-        return size() >= Math.floor(maxSize * CAPACITY_PERCENTAGE);
+        return getTotalWeight() >= Math.floor(capacity * CAPACITY_PERCENTAGE);
     }
 
     /**
@@ -99,8 +99,22 @@ public class Bag extends HashSet<Item> {
      *
      * @return an integer.
      */
-    public int getMaxSize() {
-        return maxSize;
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public int getTotalWeight() {
+        return stream().mapToInt(Item::getWeight).sum();
+    }
+
+    public int getWastedCapacity() {
+        return getCapacity() - getTotalWeight();
+    }
+
+    public Bag copy() {
+        Bag newBag = new Bag(name, capacity);
+        newBag.addAll(this);
+        return newBag;
     }
 
     @Override
@@ -126,7 +140,7 @@ public class Bag extends HashSet<Item> {
     public String toString() {
         return "Bag{" +
                 "name='" + name + '\'' +
-                ", maxSize=" + maxSize +
+                ", capacity=" + capacity +
                 ", items=" + stream().map(Item::getName).collect(Collectors.joining(", ", "[", "]")) +
                 '}';
     }

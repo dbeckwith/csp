@@ -70,6 +70,10 @@ public class Item {
         this.bag = bag;
     }
 
+    public Item copy() {
+        return new Item(name, weight, bag);
+    }
+
     /**
      * Returns whether the specified object is "equal" to this object.
      *
