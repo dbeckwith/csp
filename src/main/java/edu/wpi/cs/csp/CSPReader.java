@@ -7,21 +7,32 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents the parser to handle reading the input file and setting up the CSP.
+ *
+ * @author Daniel Beckwith
+ */
 public class CSPReader {
 
-    private static CSPReader instance = new CSPReader();
-
-    public static CSPReader getInstance() {
-        return instance;
-    }
-
     private static final String SECTION_PREFIX = "#####";
-
+    private static CSPReader instance = new CSPReader();
     private List<String[]> bagLines;
     private boolean addedBags;
 
+    /**
+     * Creates a CSPReader instance.
+     */
     private CSPReader() {
         bagLines = new ArrayList<>();
+    }
+
+    /**
+     * Returns the singleton CSPReader instance.
+     *
+     * @return a CSPReader
+     */
+    public static CSPReader getInstance() {
+        return instance;
     }
 
     /**
@@ -115,6 +126,13 @@ public class CSPReader {
         }
     }
 
+    /**
+     * Creates all of the bags given the CSP, minimum size and maximum size for each bag.
+     *
+     * @param csp     The {@link CSP} associated with the bags.
+     * @param minSize The minimum size for each bag.
+     * @param maxSize The maximum size for each bag.
+     */
     private void createBags(CSP csp, int minSize, int maxSize) {
         bagLines.forEach(line -> {
             Bag bag = new Bag(line[0], maxSize, Integer.parseInt(line[1]));
