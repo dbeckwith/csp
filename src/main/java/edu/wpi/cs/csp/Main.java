@@ -2,6 +2,7 @@ package edu.wpi.cs.csp;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 /**
  * Main class.
@@ -31,7 +32,25 @@ public class Main {
             return;
         }
 
-        System.out.println(csp);
+//        System.out.println("Items:");
+//        csp.getItems().forEach(System.out::println);
+//        System.out.println("Bags:");
+//        csp.getBags().forEach(System.out::println);
+//        System.out.println("Constraints:");
+//        csp.getConstraints().stream().sorted(Comparator.comparing(constraint -> constraint.getClass().getSimpleName())).forEach(System.out::println);
+
+        if (CSPSolver.getInstance().solve(csp)) {
+            csp.getBags().forEach(bag -> {
+                System.out.println(bag.getName() + " " + bag.stream().map(Item::getName).collect(Collectors.joining(" ")));
+                System.out.println("number of items: " + bag.size());
+                System.out.println("total weight: " + bag.getTotalWeight() + "/" + bag.getCapacity());
+                System.out.println("wasted capacity: " + (bag.getCapacity() - bag.getTotalWeight()));
+                System.out.println();
+            });
+        }
+        else {
+            System.out.println("No solution found");
+        }
     }
 
     private static void usage() {

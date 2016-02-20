@@ -1,29 +1,39 @@
 package edu.wpi.cs.csp;
 
-import java.util.HashSet;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This class represents a bag that can hold items.
  *
  * @author Aditya Nivarthi
  */
-public class Bag extends HashSet<Item> {
-
-    private static final double CAPACITY_PERCENTAGE = 0.9f;
+public class Bag {
 
     private final String name;
     private final int capacity;
+    private final Item[] items;
+    private boolean overMaxItems;
 
     /**
      * Creates a new Bag instance with the specified name and max size.
      *
      * @param name     The name of this bag.
-     * @param capacity The maximum size for this bag.
+     * @param maxItems The maximum size for this bag.
      */
-    public Bag(String name, int capacity) {
+    public Bag(String name, int maxItems, int capacity) {
         this.name = name;
         this.capacity = capacity;
+        items = new Item[maxItems];
+        overMaxItems = false;
+    }
+
+    private Bag(String name, Item[] items, int capacity) {
+        this.name = name;
+        this.items = items;
+        this.capacity = capacity;
+        overMaxItems = false;
     }
 
     /**
@@ -32,57 +42,41 @@ public class Bag extends HashSet<Item> {
      * @param item The {@link Item} to add to the bag.
      * @return true if added, false otherwise
      */
-    @Override
     public boolean add(Item item) {
-        if (super.add(item)) {
-            item.setBag(this);
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Removes the specified object from the bag. If the object can be removed, it is. If it is of type {@link Item}, then that item's bag will be set to null.
-     *
-     * @param o The object to be removed.
-     * @return true if removes, false otherwise
-     */
-    @Override
-    public boolean remove(Object o) {
-        if (super.remove(o)) {
-            if (o instanceof Item) {
-                ((Item) o).setBag(null);
+        for (int i = 0; i < items.length; i++) {
+            if (items[i] == null) {
+                items[i] = item;
+                item.setBag(this);
+                overMaxItems = false;
+                return true;
             }
-            return true;
         }
-
+        overMaxItems = true;
         return false;
     }
 
-    /**
-     * Moves the specified item from one bag to the other specified bag.
-     *
-     * @param item     The {@link Item} to move to the other bag.
-     * @param otherBag The other bag to move the {@link Item} into.
-     * @return true if the {@link Item} is removed from this bag and moved to the other bag, false otherwise
-     */
-    public boolean move(Item item, Bag otherBag) {
-        if (remove(item)) {
-            item.setBag(otherBag);
-            return otherBag.add(item);
+    public boolean remove(Item item) {
+        for (int i = 0; i < items.length; i++) {
+            if (Objects.equals(items[i], item)) {
+                items[i] = null;
+                item.setBag(null);
+                return true;
+            }
         }
-
         return false;
     }
 
-    /**
-     * Returns whether this bag is at the minimum required capacity.
-     *
-     * @return true if at minimum capacity, false otherwise
-     */
-    public boolean isAtMinimumCapacity() {
-        return getTotalWeight() >= Math.floor(capacity * CAPACITY_PERCENTAGE);
+    public boolean contains(Item item) {
+        for (int i = 0; i < items.length; i++) {
+            if (Objects.equals(items[i], item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Stream<Item> stream() {
+        return Stream.of(items).filter(Objects::nonNull);
     }
 
     /**
@@ -94,46 +88,61 @@ public class Bag extends HashSet<Item> {
         return name;
     }
 
+    public int size() {
+        return (int) Stream.of(items).filter(Objects::nonNull).count();
+    }
+
     /**
      * Returns the maximum size of this bag.
      *
      * @return an integer.
      */
+    public int getMaxItems() {
+        return items.length;
+    }
+
+    public boolean isOverMaxItems() {
+        return overMaxItems;
+    }
+
+    public boolean isAtMaxItems() {
+        return size() == getMaxItems();
+    }
+
     public int getCapacity() {
         return capacity;
     }
 
     public int getTotalWeight() {
-        return stream().mapToInt(Item::getWeight).sum();
+        return Stream.of(items).filter(Objects::nonNull).mapToInt(Item::getWeight).sum();
     }
 
-    public int getWastedCapacity() {
-        return getCapacity() - getTotalWeight();
+    public boolean isAtCapacity() {
+        return getTotalWeight() == getCapacity();
+    }
+
+    public boolean isOverCapacity() {
+        return getTotalWeight() > getCapacity();
     }
 
     public Bag copy() {
-        Bag newBag = new Bag(name, capacity);
-        newBag.addAll(this);
-        return newBag;
+        return new Bag(name, items.clone(), capacity);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Bag)) return false;
-        if (!super.equals(o)) return false;
 
-        Bag items = (Bag) o;
+        Bag bag = (Bag) o;
 
-        return name.equals(items.name);
+        return name.equals(bag.name);
 
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + name.hashCode();
-        return result;
+        return name.hashCode();
     }
 
     @Override
@@ -141,7 +150,9 @@ public class Bag extends HashSet<Item> {
         return "Bag{" +
                 "name='" + name + '\'' +
                 ", capacity=" + capacity +
-                ", items=" + stream().map(Item::getName).collect(Collectors.joining(", ", "[", "]")) +
+                ", maxSize=" + items.length +
+                ", size=" + size() +
+                ", items=" + Stream.of(items).filter(Objects::nonNull).map(Item::getName).collect(Collectors.joining(", ", "[", "]")) +
                 '}';
     }
 }

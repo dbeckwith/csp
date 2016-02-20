@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CSPReader {
 
@@ -15,7 +17,12 @@ public class CSPReader {
 
     private static final String SECTION_PREFIX = "#####";
 
-    private CSPReader() {}
+    private List<String[]> bagLines;
+    private boolean addedBags;
+
+    private CSPReader() {
+        bagLines = new ArrayList<>();
+    }
 
     /**
      * Reads an input stream and creates a {@link CSP} from it.
@@ -29,6 +36,8 @@ public class CSPReader {
         CSP csp = new CSP();
 
         String line;
+        bagLines.clear();
+        addedBags = false;
 
         r.readLine(); // read first section heading
         for (int section = 1; section <= 8; section++) {
@@ -45,20 +54,25 @@ public class CSPReader {
      * Processes a single line in a given section of the input. Each line should correspond to one object in the CSP.
      *
      * @param section the section number, which determines what types of object this line will contain
-     * @param csp the CSP to update
-     * @param parts the parts of the line (space-separated)
+     * @param csp     the CSP to update
+     * @param parts   the parts of the line (space-separated)
      * @throws NumberFormatException if there was an error coercing a line part to a number
      */
     private void processLine(int section, CSP csp, String[] parts) throws NumberFormatException {
+        if (section > 3 && !addedBags) {
+            createBags(csp, 0, csp.getItems().size());
+            addedBags = true;
+        }
         switch (section) {
             case 1: // items
                 csp.getItems().add(new Item(parts[0], Integer.parseInt(parts[1])));
                 break;
             case 2: // bags
-                csp.getBags().add(new Bag(parts[0], Integer.parseInt(parts[1])));
+                bagLines.add(parts);
                 break;
             case 3: // fitting limits
-                csp.getConstraints().add(new BagFitConstraint(csp.getBags(), Integer.parseInt(parts[0]), Integer.parseInt(parts[1])));
+                createBags(csp, Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+                addedBags = true;
                 break;
             case 4: // inclusion
             {
@@ -99,5 +113,16 @@ public class CSPReader {
                 ));
                 break;
         }
+    }
+
+    private void createBags(CSP csp, int minSize, int maxSize) {
+        bagLines.forEach(line -> {
+            Bag bag = new Bag(line[0], maxSize, Integer.parseInt(line[1]));
+            csp.getBags().add(bag);
+            csp.getConstraints().add(new MinSizeConstraint(bag, minSize));
+            csp.getConstraints().add(new MaxSizeConstraint(bag));
+            csp.getConstraints().add(new MinCapacityPercentageConstraint(bag));
+            csp.getConstraints().add(new MaxCapacityConstraint(bag));
+        });
     }
 }

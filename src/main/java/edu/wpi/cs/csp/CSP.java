@@ -35,6 +35,10 @@ public class CSP {
         return constraints;
     }
 
+    public boolean isValid() {
+        return constraints.stream().allMatch(Constraint::test) && getItems().stream().allMatch(item -> item.getBag() != null);
+    }
+
     @Override
     public String toString() {
         return "CSP{" +
