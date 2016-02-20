@@ -70,7 +70,12 @@ public class Item {
         this.bag = bag;
     }
 
-    public Item copy() {
+    /**
+     * Creates and returns a copy of this object.
+     *
+     * @return an Item
+     */
+    public Item clone() {
         return new Item(name, weight, bag);
     }
 
@@ -103,6 +108,11 @@ public class Item {
         return result;
     }
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a {@link String}
+     */
     @Override
     public String toString() {
         return "Item{" +

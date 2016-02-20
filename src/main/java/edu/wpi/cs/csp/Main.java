@@ -21,6 +21,8 @@ public class Main {
             usage();
             return;
         }
+
+        // Get filename
         String filename = args[0];
 
         CSP csp;
@@ -32,13 +34,7 @@ public class Main {
             return;
         }
 
-//        System.out.println("Items:");
-//        csp.getItems().forEach(System.out::println);
-//        System.out.println("Bags:");
-//        csp.getBags().forEach(System.out::println);
-//        System.out.println("Constraints:");
-//        csp.getConstraints().stream().sorted(Comparator.comparing(constraint -> constraint.getClass().getSimpleName())).forEach(System.out::println);
-
+        // Get solution to CSP
         if (CSPSolver.getInstance().solve(csp)) {
             csp.getBags().forEach(bag -> {
                 System.out.println(bag.getName() + " " + bag.stream().map(Item::getName).collect(Collectors.joining(" ")));
@@ -48,11 +44,14 @@ public class Main {
                 System.out.println();
             });
         }
-        else {
+        else { // No solution found
             System.out.println("No solution found");
         }
     }
 
+    /**
+     * Prints program usage information to the console.
+     */
     private static void usage() {
         System.out.println("Usage: java csp.jar csp_info_file");
     }
