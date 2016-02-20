@@ -48,6 +48,11 @@ public class EqualityConstraint implements Constraint {
         return item1.getBag() == item2.getBag();
     }
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a {@link String}
+     */
     @Override
     public String toString() {
         return "EqualityConstraint{" +

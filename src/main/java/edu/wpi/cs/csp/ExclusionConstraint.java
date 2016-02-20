@@ -52,6 +52,11 @@ public class ExclusionConstraint implements Constraint {
         return Stream.of(bags).noneMatch(bag -> bag.contains(item));
     }
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a {@link String}
+     */
     @Override
     public String toString() {
         return "ExclusionConstraint{" +

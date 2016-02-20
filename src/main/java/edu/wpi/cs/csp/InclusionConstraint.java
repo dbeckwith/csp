@@ -52,6 +52,11 @@ public class InclusionConstraint implements Constraint {
         return Stream.of(bags).anyMatch(bag -> bag.contains(item));
     }
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return a {@link String}
+     */
     @Override
     public String toString() {
         return "InclusionConstraint{" +
