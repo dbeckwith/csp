@@ -15,9 +15,15 @@ public interface Constraint {
      * Tests the constraint for being satisfied.
      *
      * @param csp
-     * @return true if satisfied, false otherwise
+     * @return a {@link Result}
      */
     Result test(CSP csp);
 
+    /**
+     * Tests whether this constraint uses the given item as a parameter.
+     *
+     * @param item
+     * @return
+     */
     boolean involves(Item item);
 }

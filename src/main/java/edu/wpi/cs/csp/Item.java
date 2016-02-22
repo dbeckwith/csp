@@ -70,6 +70,11 @@ public class Item {
         this.bag = bag;
     }
 
+    /**
+     * Returns true if this item has been assigned a bag.
+     *
+     * @return
+     */
     public boolean hasAssignment() {
         return bag != null;
     }

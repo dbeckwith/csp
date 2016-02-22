@@ -38,14 +38,9 @@ public class MinSizeConstraint implements Constraint {
         return minSize;
     }
 
-    /**
-     * Tests the constraint for being satisfied.
-     *
-     * @param csp
-     * @return true if satisfied, false otherwise
-     */
     @Override
     public Result test(CSP csp) {
+        // if not all items in the CSP have been assigned, ignore this constraint
         if (!csp.getItems().stream().allMatch(Item::hasAssignment)) return Result.IGNORED;
         return bag.size() >= minSize ? Result.PASSED : Result.FAILED;
     }

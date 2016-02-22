@@ -38,14 +38,9 @@ public class InequalityConstraint implements Constraint {
         return item2;
     }
 
-    /**
-     * Tests the constraint for being satisfied.
-     *
-     * @param csp
-     * @return true if satisfied, false otherwise
-     */
     @Override
     public Result test(CSP csp) {
+        // if either of this constraint's items haven't been assigned, ignore this constraint
         if (!item1.hasAssignment() || !item2.hasAssignment()) return Result.IGNORED;
         return item1.getBag() != item2.getBag() ? Result.PASSED : Result.FAILED;
     }

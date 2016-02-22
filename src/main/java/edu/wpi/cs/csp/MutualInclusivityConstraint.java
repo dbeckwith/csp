@@ -61,14 +61,9 @@ public class MutualInclusivityConstraint implements Constraint {
         return bag2;
     }
 
-    /**
-     * Tests the constraint for being satisfied.
-     *
-     * @param csp
-     * @return true if satisfied, false otherwise
-     */
     @Override
     public Result test(CSP csp) {
+        // if either of this constraint's items haven't been assigned, ignore this constraint
         if (!item1.hasAssignment() || !item2.hasAssignment()) return Result.IGNORED;
         return (item1.getBag() == bag1 && item2.getBag() == bag2) ||
                 (item1.getBag() == bag2 && item2.getBag() == bag1) ||

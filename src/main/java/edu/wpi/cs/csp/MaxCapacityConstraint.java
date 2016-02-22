@@ -27,12 +27,6 @@ public class MaxCapacityConstraint implements Constraint {
         return bag;
     }
 
-    /**
-     * Tests the constraint for being satisfied.
-     *
-     * @param csp
-     * @return true if satisfied, false otherwise
-     */
     @Override
     public Result test(CSP csp) {
         return bag.isOverCapacity() ? Result.FAILED : Result.PASSED;

@@ -83,13 +83,16 @@ public class CSP {
     }
 
     public void saveDomains() {
+        // deep copy the map of domains
         Map<Item, Set<Bag>> domainCopy = new HashMap<>();
         domains.forEach((item, domain) -> domainCopy.put(item, new HashSet<>(domain)));
+        // push to stack of saved domains
         savedDomains.push(domainCopy);
     }
 
     public void restoreDomains() {
         domains.clear();
+        // set domains from top of stack
         savedDomains.pop().forEach((item, domain) -> domains.put(item, new HashSet<>(domain)));
     }
 

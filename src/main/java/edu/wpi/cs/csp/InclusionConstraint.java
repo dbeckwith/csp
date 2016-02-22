@@ -42,14 +42,9 @@ public class InclusionConstraint implements Constraint {
         return bags;
     }
 
-    /**
-     * Tests the constraint for being satisfied.
-     *
-     * @param csp
-     * @return true if satisfied, false otherwise
-     */
     @Override
     public Result test(CSP csp) {
+        // if this constraint's item hasn't been assigned, ignore this constraint
         if (!item.hasAssignment()) return Result.IGNORED;
         return Stream.of(bags).anyMatch(bag -> bag.contains(item)) ? Result.PASSED : Result.FAILED;
     }

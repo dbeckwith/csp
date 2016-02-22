@@ -51,10 +51,10 @@ public class Bag {
      * @return true if added, false otherwise
      */
     public boolean add(Item item) {
-        if (overflowItem != null) {
-            return false;
-        }
-        if (item.getBag() != null) throw new IllegalStateException("Item already in a bag");
+        if (overflowItem != null) throw new IllegalStateException("Bag is already overfull");
+        if (item.hasAssignment()) throw new IllegalStateException("Item already in a bag");
+
+        // find empty spot in bag and put item there
         for (int i = 0; i < items.length; i++) {
             if (items[i] == null) {
                 items[i] = item;
@@ -63,6 +63,8 @@ public class Bag {
                 return true;
             }
         }
+
+        // if no empty spots, the bag is now overfull with the given item
         overflowItem = item;
         return false;
     }
@@ -74,10 +76,13 @@ public class Bag {
      * @return true if removed, false otherwise
      */
     public boolean remove(Item item) {
-        if (overflowItem != null) {
+        // if the item to be removed is the overflow item, this bag is no longer overfull
+        if (overflowItem != null && item.equals(overflowItem)) {
             overflowItem = null;
             return true;
         }
+
+        // find the given item and set its spot to empty
         for (int i = 0; i < items.length; i++) {
             if (Objects.equals(items[i], item)) {
                 items[i] = null;
@@ -95,12 +100,6 @@ public class Bag {
      * @return true if the item is contained, false otherwise
      */
     public boolean contains(Item item) {
-//        for (int i = 0; i < items.length; i++) {
-//            if (Objects.equals(items[i], item)) {
-//                return true;
-//            }
-//        }
-//        return false;
         return Objects.equals(item.getBag(), this);
     }
 
@@ -128,6 +127,7 @@ public class Bag {
      * @return an integer
      */
     public int size() {
+        // count non-null items
         return (int) Stream.of(items).filter(Objects::nonNull).count();
     }
 
@@ -173,6 +173,7 @@ public class Bag {
      * @return an integer
      */
     public int getTotalWeight() {
+        // sum weights of non-null items
         return Stream.of(items).filter(Objects::nonNull).mapToInt(Item::getWeight).sum();
     }
 
