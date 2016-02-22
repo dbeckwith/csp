@@ -55,7 +55,7 @@
                             <mainClass>edu.wpi.cs.csp.Main</mainClass>
                         </manifest>
                     </archive>
-                    <finalName>csp</finalName>
+                    <finalName>anivarthi-djbeckwith-csp</finalName>
                 </configuration>
             </plugin>
         </plugins>

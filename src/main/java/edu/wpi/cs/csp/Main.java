@@ -53,6 +53,6 @@ public class Main {
      * Prints program usage information to the console.
      */
     private static void usage() {
-        System.out.println("Usage: java -jar csp.jar csp_info_file");
+        System.out.println("Usage: java -jar anivarthi-djbeckwith-csp.jar csp_info_file");
     }
 }
