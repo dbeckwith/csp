@@ -14,7 +14,7 @@ public class Bag {
     private final String name;
     private final int capacity;
     private final Item[] items;
-    private boolean overMaxItems;
+    private Item overflowItem;
 
     /**
      * Creates a new Bag instance with the specified name, max size and total weight capacity.
@@ -27,7 +27,7 @@ public class Bag {
         this.name = name;
         this.capacity = capacity;
         items = new Item[maxItems];
-        overMaxItems = false;
+        overflowItem = null;
     }
 
     /**
@@ -41,7 +41,7 @@ public class Bag {
         this.name = name;
         this.items = items;
         this.capacity = capacity;
-        overMaxItems = false;
+        overflowItem = null;
     }
 
     /**
@@ -51,15 +51,19 @@ public class Bag {
      * @return true if added, false otherwise
      */
     public boolean add(Item item) {
+        if (overflowItem != null) {
+            return false;
+        }
+        if (item.getBag() != null) throw new IllegalStateException("Item already in a bag");
         for (int i = 0; i < items.length; i++) {
             if (items[i] == null) {
                 items[i] = item;
                 item.setBag(this);
-                overMaxItems = false;
+                overflowItem = null;
                 return true;
             }
         }
-        overMaxItems = true;
+        overflowItem = item;
         return false;
     }
 
@@ -70,6 +74,10 @@ public class Bag {
      * @return true if removed, false otherwise
      */
     public boolean remove(Item item) {
+        if (overflowItem != null) {
+            overflowItem = null;
+            return true;
+        }
         for (int i = 0; i < items.length; i++) {
             if (Objects.equals(items[i], item)) {
                 items[i] = null;
@@ -87,12 +95,13 @@ public class Bag {
      * @return true if the item is contained, false otherwise
      */
     public boolean contains(Item item) {
-        for (int i = 0; i < items.length; i++) {
-            if (Objects.equals(items[i], item)) {
-                return true;
-            }
-        }
-        return false;
+//        for (int i = 0; i < items.length; i++) {
+//            if (Objects.equals(items[i], item)) {
+//                return true;
+//            }
+//        }
+//        return false;
+        return Objects.equals(item.getBag(), this);
     }
 
     /**
@@ -137,7 +146,7 @@ public class Bag {
      * @return true if over filled, false otherwise
      */
     public boolean isOverMaxItems() {
-        return overMaxItems;
+        return overflowItem != null;
     }
 
     /**
@@ -231,9 +240,10 @@ public class Bag {
     public String toString() {
         return "Bag{" +
                 "name='" + name + '\'' +
+                ", totalWeight=" + getTotalWeight() +
                 ", capacity=" + capacity +
-                ", maxSize=" + items.length +
                 ", size=" + size() +
+                ", maxSize=" + items.length +
                 ", items=" + Stream.of(items).filter(Objects::nonNull).map(Item::getName).collect(Collectors.joining(", ", "[", "]")) +
                 '}';
     }

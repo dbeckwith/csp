@@ -41,11 +41,18 @@ public class EqualityConstraint implements Constraint {
     /**
      * Tests the constraint for being satisfied.
      *
+     * @param csp
      * @return true if satisfied, false otherwise
      */
     @Override
-    public boolean test() {
-        return item1.getBag() == item2.getBag();
+    public Result test(CSP csp) {
+        if (!item1.hasAssignment() || !item2.hasAssignment()) return Result.IGNORED;
+        return item1.getBag() == item2.getBag() ? Result.PASSED : Result.FAILED;
+    }
+
+    @Override
+    public boolean involves(Item item) {
+        return item1.equals(item) || item2.equals(item);
     }
 
     /**

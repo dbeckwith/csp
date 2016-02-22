@@ -64,13 +64,23 @@ public class MutualInclusivityConstraint implements Constraint {
     /**
      * Tests the constraint for being satisfied.
      *
+     * @param csp
      * @return true if satisfied, false otherwise
      */
     @Override
-    public boolean test() {
+    public Result test(CSP csp) {
+        if (!item1.hasAssignment() || !item2.hasAssignment()) return Result.IGNORED;
         return (item1.getBag() == bag1 && item2.getBag() == bag2) ||
                 (item1.getBag() == bag2 && item2.getBag() == bag1) ||
-                (item1.getBag() != bag1 && item1.getBag() != bag2 && item2.getBag() != bag1 && item2.getBag() != bag2);
+                (item1.getBag() != bag1 && item1.getBag() != bag2 &&
+                        item2.getBag() != bag1 && item2.getBag() != bag2) ?
+                Result.PASSED :
+                Result.FAILED;
+    }
+
+    @Override
+    public boolean involves(Item item) {
+        return item1.equals(item) || item2.equals(item);
     }
 
     /**

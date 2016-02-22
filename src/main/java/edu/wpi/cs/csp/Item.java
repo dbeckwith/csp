@@ -70,6 +70,10 @@ public class Item {
         this.bag = bag;
     }
 
+    public boolean hasAssignment() {
+        return bag != null;
+    }
+
     /**
      * Creates and returns a copy of this object.
      *
@@ -79,33 +83,20 @@ public class Item {
         return new Item(name, weight, bag);
     }
 
-    /**
-     * Returns whether the specified object is "equal" to this object.
-     *
-     * @param o The object to compare to this object.
-     * @return true if equal, false otherwise
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Item)) return false;
 
         Item item = (Item) o;
 
-        if (bag != null ? !bag.equals(item.bag) : item.bag != null) return false;
         return name.equals(item.name);
+
     }
 
-    /**
-     * Returns the hashcode for this class.
-     *
-     * @return an integer
-     */
     @Override
     public int hashCode() {
-        int result = bag != null ? bag.hashCode() : 0;
-        result = 31 * result + name.hashCode();
-        return result;
+        return name.hashCode();
     }
 
     /**

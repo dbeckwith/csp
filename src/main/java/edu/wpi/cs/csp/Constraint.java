@@ -7,10 +7,17 @@ package edu.wpi.cs.csp;
  */
 public interface Constraint {
 
+    enum Result {
+        PASSED, FAILED, IGNORED
+    }
+
     /**
      * Tests the constraint for being satisfied.
      *
+     * @param csp
      * @return true if satisfied, false otherwise
      */
-    boolean test();
+    Result test(CSP csp);
+
+    boolean involves(Item item);
 }

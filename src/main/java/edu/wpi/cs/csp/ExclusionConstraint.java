@@ -45,11 +45,18 @@ public class ExclusionConstraint implements Constraint {
     /**
      * Tests the constraint for being satisfied.
      *
+     * @param csp
      * @return true if satisfied, false otherwise
      */
     @Override
-    public boolean test() {
-        return Stream.of(bags).noneMatch(bag -> bag.contains(item));
+    public Result test(CSP csp) {
+        if (!item.hasAssignment()) return Result.IGNORED;
+        return Stream.of(bags).noneMatch(bag -> bag.contains(item)) ? Result.PASSED : Result.FAILED;
+    }
+
+    @Override
+    public boolean involves(Item item) {
+        return this.item.equals(item);
     }
 
     /**

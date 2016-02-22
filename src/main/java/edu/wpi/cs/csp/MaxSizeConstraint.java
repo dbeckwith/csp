@@ -30,11 +30,17 @@ public class MaxSizeConstraint implements Constraint {
     /**
      * Tests the constraint for being satisfied.
      *
+     * @param csp
      * @return true if satisfied, false otherwise
      */
     @Override
-    public boolean test() {
-        return !bag.isOverMaxItems();
+    public Result test(CSP csp) {
+        return bag.isOverMaxItems() ? Result.FAILED : Result.PASSED;
+    }
+
+    @Override
+    public boolean involves(Item item) {
+        return false;
     }
 
     /**

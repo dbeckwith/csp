@@ -1,6 +1,10 @@
 package edu.wpi.cs.csp;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -13,6 +17,8 @@ public class CSP {
     private final Set<Item> items;
     private final Set<Bag> bags;
     private final Set<Constraint> constraints;
+    private final Map<Item, Set<Bag>> domains;
+    private final Deque< Map<Item, Set<Bag>>> savedDomains;
 
     /**
      * Creates a CSP instance.
@@ -21,6 +27,8 @@ public class CSP {
         items = new HashSet<>();
         bags = new HashSet<>();
         constraints = new HashSet<>();
+        domains = new HashMap<>();
+        savedDomains = new ArrayDeque<>();
     }
 
     /**
@@ -70,13 +78,29 @@ public class CSP {
         return constraints;
     }
 
+    public Map<Item, Set<Bag>> getDomains() {
+        return domains;
+    }
+
+    public void saveDomains() {
+        Map<Item, Set<Bag>> domainCopy = new HashMap<>();
+        domains.forEach((item, domain) -> domainCopy.put(item, new HashSet<>(domain)));
+        savedDomains.push(domainCopy);
+    }
+
+    public void restoreDomains() {
+        domains.clear();
+        savedDomains.pop().forEach((item, domain) -> domains.put(item, new HashSet<>(domain)));
+    }
+
     /**
      * Returns whether the current CSP satisfies all the associated constraints and if all the items are placed within a bag.
      *
      * @return true if conditions satisfied, false otherwise
      */
     public boolean isValid() {
-        return constraints.stream().allMatch(Constraint::test) && getItems().stream().allMatch(item -> item.getBag() != null);
+        return getConstraints().stream().allMatch(constraint -> constraint.test(this) == Constraint.Result.PASSED) &&
+                getItems().stream().allMatch(Item::hasAssignment);
     }
 
     /**

@@ -57,6 +57,10 @@ public class CSPReader {
                 processLine(section, csp, line.split("\\s+"));
             }
         }
+        if (!addedBags) {
+            createBags(csp, 0, csp.getItems().size());
+            addedBags = true;
+        }
 
         return csp;
     }
